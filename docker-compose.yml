@@ -1,0 +1,14 @@
+version: "3.7"
+
+services:
+  db:
+    container_name: "crud_products"
+    image: mysql:5.7
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    volumes:
+      - /var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: teste123
+      MYSQL_DATABASE: sales_bd
+    ports:
+      - "3308:3306"
