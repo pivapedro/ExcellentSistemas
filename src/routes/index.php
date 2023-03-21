@@ -1,56 +1,87 @@
 <?php
-
 class Router
 {
-  protected $linker;
-  protected $modulo = '';
-  protected $identificador;
+    private $routes = array();
 
-  public function __construct()
-  {
-    $this->linkBreaker($_SERVER['REQUEST_URI']);
-  }
-
-
-  public function linkBreaker($url)
-  {
-    $urlBreak = explode("/", $_SERVER['REQUEST_URI']);
-    $parameters = explode('?', end($urlBreak));
-    $counter = count($urlBreak);
-    $counterParameters = count($parameters);
-
-    $this->identificador = $urlBreak;
-
-    switch ($counter) {
-      case "1":
-        $this->setModulo($urlBreak[0]);
-      case "2":
-        $this->setModulo($urlBreak[1]);
-      case "3":
-        $this->setModulo($urlBreak[2]);
-      case "4":
-        $this->setModulo($urlBreak[3]);
+    // Adiciona uma rota para o roteador
+    public function addRoute($method, $path, $handler)
+    {
+        $this->routes[] = array('method' => $method, 'path' => $path, 'handler' => $handler);
     }
 
-  }
+    // Roteia a requisição atual
+    public function useRoute()
+    {
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+        $requestPath = $_SERVER['PATH_INFO'] ?? '/';
 
-  private function setModulo($modulo)
-  {
-    $this->modulo = $modulo;
-    return $this;
-  }
+        foreach ($this->routes as $route) {
+            // Verifica se o método da requisição e o caminho da rota correspondem
+            if ($route['method'] == $requestMethod && $route['path'] == $requestPath) {
+                $body = file_get_contents('php://input');
 
-  public function getModulo()
-  {
+                // Converter o conteúdo em um objeto PHP
+                $data = json_decode($body);
 
-    return $this->modulo;
-  }
+                // Verificar se houve algum erro na decodificação do JSON
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    // Lidar com o erro, se necessário
+                }
+                // Chama o manipulador da rota e obtém a resposta
+                $response = call_user_func($route['handler'], $data);
 
-  public function getIdentificador()
-  {
+                // Verifica se a resposta é um array (JSON) ou uma string (PHP)
+                if (is_array($response)) {
+                    // Transforma a resposta em JSON
+                    $json = json_encode($response);
 
-    return $this->identificador;
-  }
+                    // Define o tipo de conteúdo da resposta como JSON e envia a resposta
+                    header('Content-Type: application/json');
+                    echo $json;
+                } else {
+                    // Define o tipo de conteúdo da resposta como HTML e envia a resposta
+                    header('Content-Type: text/html');
+                    include($response);
+                }
+
+                // Encerra a execução do script
+                exit();
+            }
+        }
+
+        // Se a rota não for encontrada, envia uma resposta 404
+        header('HTTP/1.0 404 Not Found');
+        echo '404 Not Found';
+    }
+
+    function __construct()
+    {
+
+        $this->addRoute('GET', '/', function () {
+            return ("src/views/home/index.php");
+        });
+        $this->addRoute('GET', '/order', function () {
+            return ("src/views/order/index.php");
+        });
+        $this->addRoute('GET', '/api/data', function () {
+            return ("src/views/products/index.php");
+        });
+
+        $this->addRoute('POST', '/api/product/insert', function ($data) {
+            $product = new Products();
+            return $product->insertProduct($data);
+        });
+
+        $this->addRoute('PUT', '/api/product', function ($data) {
+            $product = new Products();
+            $product->changeProduct($data);
+            return array('test' => true);
+        });
+
+
+        $this->addRoute('GET', '/api/product', function () {
+            $product = new Products();
+            return $product->getProducts();
+        });
+    }
 }
-
-?>

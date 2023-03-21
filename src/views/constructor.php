@@ -33,13 +33,13 @@ class Constructor
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Produtos</a>
+              <a class="nav-link active" aria-current="page" href="/">Produtos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Pedidos</a>
+              <a class="nav-link active" aria-current="page" href="/order">Pedidos</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Novo Pedido</a>
+              <a class="nav-link active" aria-current="page" href="/new-order">Novo Pedido</a>
             </li>
           </ul>
          <!--  <form class="d-flex" role="search">
