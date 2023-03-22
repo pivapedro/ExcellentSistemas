@@ -1,4 +1,11 @@
 <?php
+
+namespace Routes;
+
+
+use Controllers\ProductsController;
+use Models\Order;
+
 class Router
 {
     private $routes = array();
@@ -63,25 +70,55 @@ class Router
         $this->addRoute('GET', '/order', function () {
             return ("src/views/order/index.php");
         });
-        $this->addRoute('GET', '/api/data', function () {
+        $this->addRoute('GET', '/products', function () {
             return ("src/views/products/index.php");
         });
 
         $this->addRoute('POST', '/api/product/insert', function ($data) {
-            $product = new Products();
-            return $product->insertProduct($data);
+            $product = new ProductsController();
+            return $product->createProduct($data);
+        });
+        $this->addRoute('DELETE', '/api/product', function ($data) {
+            $product = new ProductsController();
+            return $product->deleteProduct($data);
+        });
+        $this->addRoute('DELETE', '/api/product/image', function ($data) {
+            $product = new ProductsController();
+            return $product->deleteImage($data);
+        });
+        $this->addRoute('POST', '/api/product/image', function ($data) {
+            $product = new ProductsController();
+            return $product->addImage($data, $data->product_id);
         });
 
         $this->addRoute('PUT', '/api/product', function ($data) {
-            $product = new Products();
-            $product->changeProduct($data);
-            return array('test' => true);
+            $product = new ProductsController();
+            return  $product->changeProduct($data);
+        });
+
+        $this->addRoute('GET', '/api/products', function () {
+            $product = new ProductsController();
+            return $product->getAllProducts();
+        });
+        $this->addRoute('GET', '/api/product', function ($data) {
+            $product = new ProductsController();
+            return $product->getProduct($data);
+        });
+
+        $this->addRoute('POST', '/api/order/insert', function ($data) {
+            $order = new Order();
+            return $order->createOrder($data);
+        });
+
+        $this->addRoute('PUT', '/api/order', function ($data) {
+            $order = new Order();
+            return $order->changeOrder($data);
         });
 
 
-        $this->addRoute('GET', '/api/product', function () {
-            $product = new Products();
-            return $product->getProducts();
+        $this->addRoute('GET', '/api/order', function () {
+            $order = new Order();
+            return $order->getOrders();
         });
     }
 }

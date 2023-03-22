@@ -1,5 +1,10 @@
 <?php
 
+namespace Controllers;
+
+use PDO;
+use PDOException;
+
 class Conection
 {
   private $link;
@@ -7,6 +12,8 @@ class Conection
   private $dbname = 'sales';
   private $username = 'root';
   private $password = 'teste123';
+
+  public $lastInsertId = '';
   private function ConnectionStart()
   {
     try {
@@ -32,8 +39,17 @@ class Conection
       $stmt = $this->link->prepare($query);
       $stmt->execute();
       $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $this->lastInsertId = $this->link->lastInsertId();
+
+
       if ($results) {
+        if (!count($results)) {
+          header('HTTP/1.0 404 Not Found');
+        }
         return $results;
+      } else {
+        header('HTTP/1.0 404 Not Found');
+        return [];
       }
     } catch (PDOException $e) {
     };
