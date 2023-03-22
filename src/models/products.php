@@ -12,7 +12,7 @@ class Products
   public function getProducts()
   {
     $connection = new Conection();
-    $sql = 'SELECT * FROM product';
+    $sql = 'SELECT * FROM 	product p left join product_images pi2 on p.product_id = pi2.fk_product_id ';
     $data = $connection->SqlQueryExe($sql);
     return $data;
   }

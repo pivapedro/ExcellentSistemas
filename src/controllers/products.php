@@ -5,6 +5,7 @@ namespace Controllers;
 
 
 use Models\Products;
+use stdClass;
 use Utils\Responses;
 
 class ProductsController
@@ -22,11 +23,42 @@ class ProductsController
   public function getAllProducts()
   {
     $data = $this->productsModel->getProducts();
-    if (count($data)) {
-      return $data;
-    } else {
-      return [];
+    $produtos = $data;
+    $produtos_unicos = [];
+
+    foreach ($produtos as $produto) {
+      $produto_id = $produto['product_id'];
+      if ($produto['image_id']) {
+        $imagem = [
+          'image_id' => $produto['image_id'],
+          'image_src' => $produto['image_src']
+        ];
+      } else {
+        $imagem = [];
+      }
+
+      // verifica se já existe um produto com o mesmo ID no array
+      $produto_existente = array_filter($produtos_unicos, function ($p) use ($produto_id) {
+        return $p['product_id'] == $produto_id;
+      });
+
+      if (count($produto_existente) == 0) {
+        // se não existir, adiciona o produto no array com a imagem
+        $produto_unico = [
+          'product_id' => $produto_id,
+          'description' => $produto['description'],
+          'value' => $produto['value'],
+          'current_inventory' => $produto['current_inventory'],
+          'imagens' => count($imagem) ? [$imagem] : []
+        ];
+        $produtos_unicos[] = $produto_unico;
+      } else {
+        // se já existir, adiciona apenas a imagem no produto existente
+        $key = key($produto_existente);
+        $produtos_unicos[$key]['imagens'][] = $imagem;
+      }
     }
+    return $produtos_unicos;
   }
 
   public function getProduct($data)
