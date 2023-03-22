@@ -1,6 +1,16 @@
 version: "3.7"
 
 services:
+  apache:
+    image: 'php:7.4-apache'
+    container_name: php
+    restart: always
+    ports:
+      - '80:80'
+    depends_on:
+      - mysqldb
+    links:
+      - mysqldb  
   db:
     container_name: "crud_products"
     image: mysql:5.7

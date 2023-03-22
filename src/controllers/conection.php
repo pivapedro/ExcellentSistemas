@@ -37,19 +37,25 @@ class Conection
 
     try {
       $stmt = $this->link->prepare($query);
+      $this->link->beginTransaction();
       $stmt->execute();
-      $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
       $this->lastInsertId = $this->link->lastInsertId();
+      $this->link->commit();
+      
+      try {
 
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-      if ($results) {
-        if (!count($results)) {
+        if ($results) {
+          if (!count($results)) {
+            header('HTTP/1.0 404 Not Found');
+          }
+          return $results;
+        } else {
           header('HTTP/1.0 404 Not Found');
+          return [];
         }
-        return $results;
-      } else {
-        header('HTTP/1.0 404 Not Found');
-        return [];
+      } catch (\Throwable $th) {
       }
     } catch (PDOException $e) {
     };

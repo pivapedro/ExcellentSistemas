@@ -30,10 +30,7 @@ class Products
     $connection = new Conection();
     $sql = 'INSERT INTO product ( description, value ,current_inventory ) VALUES ("' . $data->description . '", ' . $data->value . ', ' . $data->current_inventory . ')';
     $data = $connection->SqlQueryExe($sql);
-    if ($data->image_src) {
-      echo $connection->lastInsertId;
-      $this->addImage($data,  $connection->lastInsertId);
-    }
+    return $connection->lastInsertId;
   }
 
   public function deleteProduct($data)
@@ -58,14 +55,14 @@ class Products
   public function addImage($data, $product_id)
   {
     $connection = new Conection();
-    $sql = 'INSERT INTO product_images ( product_id, image_src) VALUES ("' .  $product_id . '", ' . $data->image_src . ')';
+    $sql = 'INSERT INTO product_images ( product_id, image_src) VALUES (' .  $product_id . ', "' . $data->image_src . '")';
     $connection->SqlQueryExe($sql);
   }
 
   public function deleteImage($data)
   {
     $connection = new Conection();
-    $sql = 'DELETE FROM product_images WHERE image_id = ' . $data->image_id . ')';
+    $sql = 'DELETE FROM product_images WHERE image_id=' . $data->image_id;
     $connection->SqlQueryExe($sql);
   }
 }
