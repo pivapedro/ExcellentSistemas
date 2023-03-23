@@ -37,23 +37,21 @@ class ProductsController
         $imagem = [];
       }
 
-      // verifica se já existe um produto com o mesmo ID no array
       $produto_existente = array_filter($produtos_unicos, function ($p) use ($produto_id) {
         return $p['product_id'] == $produto_id;
       });
 
       if (count($produto_existente) == 0) {
-        // se não existir, adiciona o produto no array com a imagem
         $produto_unico = [
           'product_id' => $produto_id,
           'description' => $produto['description'],
           'value' => $produto['value'],
+          'name' => $produto['name'],
           'current_inventory' => $produto['current_inventory'],
           'imagens' => count($imagem) ? [$imagem] : []
         ];
         $produtos_unicos[] = $produto_unico;
       } else {
-        // se já existir, adiciona apenas a imagem no produto existente
         $key = key($produto_existente);
         $produtos_unicos[$key]['imagens'][] = $imagem;
       }
@@ -63,7 +61,7 @@ class ProductsController
 
   public function getProduct($data)
   {
-    $data = $this->productsModel->getProduct($data->product_id);
+    $data = $this->productsModel->getProduct($data);
     if (count($data)) {
       return $data;
     } else {
@@ -73,7 +71,7 @@ class ProductsController
 
   public function createProduct($data)
   {
-    if ($data->description && $data->value && $data->current_inventory) {
+    if ($data->name && $data->value && $data->current_inventory) {
       try {
         $product_id = $this->productsModel->insertProduct($data);
         $this->product_id = $product_id;
@@ -108,7 +106,7 @@ class ProductsController
   }
   public function addImage($data, $product_id)
   {
-    if ($data->image_id && $product_id) {
+    if ($data->image_src && $product_id) {
       $this->productsModel->addImage($data, $product_id);
       return $this->response->sucessResponse();
     } else {

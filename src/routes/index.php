@@ -70,7 +70,7 @@ class Router
         $this->addRoute('GET', '/order', function () {
             return ("src/views/order/index.php");
         });
-        $this->addRoute('GET', '/products', function () {
+        $this->addRoute('GET', '/product', function () {
             return ("src/views/products/index.php");
         });
 
@@ -100,7 +100,7 @@ class Router
             $product = new ProductsController();
             return $product->getAllProducts();
         });
-        $this->addRoute('GET', '/api/product', function ($data) {
+        $this->addRoute('POST', '/api/product', function ($data) {
             $product = new ProductsController();
             return $product->getProduct($data);
         });

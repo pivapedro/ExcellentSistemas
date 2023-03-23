@@ -1,8 +1,13 @@
 <?php
+
+use Controllers\ProductsController;
+
 $constructor = new Constructor();
 
 $constructor->getHead('Tela de Produtos');
 $constructor->NavBar();
+
+$productsController = new ProductsController()
 ?>
 
 
@@ -20,28 +25,38 @@ $constructor->NavBar();
           <thead>
             <tr>
               <th>ID</th>
+              <th>Nome</th>
               <th>Descrição</th>
               <th>Valor de Venda</th>
               <th>Estoque</th>
               <th>Imagens</th>
-              <th>Ações</th>
+              <th class="text-end">Ações</th>
             </tr>
           </thead>
           <tbody>
+
             <!-- Exemplo de produto na lista -->
-            <tr>
-              <td>1</td>
-              <td>Produto A</td>
-              <td>R$ 99,99</td>
-              <td>10</td>
-              <td>
-                <img src="https://via.placeholder.com/45x45" alt="Imagem do Produto A">
-              </td>
-              <td class="text-end">
-                <button type="button" class="btn btn-primary">Editar</button>
-                <button type="button" class="btn btn-danger">Excluir</button>
-              </td>
-            </tr>
+            <?php
+            array_map(function ($data) {
+            ?>
+              <tr>
+                <td><?php echo $data['product_id'] ?></td>
+                <td><?php echo $data['name'] ?></td>
+                <td><?php echo $data['description'] ?></td>
+                <td><?php echo $data['value'] ?></td>
+                <td><?php echo $data['current_inventory'] ?></td>
+                <td></td>
+
+
+                <td class="text-end">
+                  <button type="button" class="btn btn-primary" onclick="goToEdit(<?php echo $data['product_id'] ?>)">Editar</button>
+                  <button type="button" class="btn btn-danger">Excluir</button>
+                </td>
+              </tr>
+            <?php
+            }, $productsController->getAllProducts())
+
+            ?>
             <!-- Fim do exemplo -->
           </tbody>
         </table>
@@ -55,4 +70,13 @@ $constructor->NavBar();
 </body>
 <!-- Importando o jQuery e o Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-kcevGRVH1AQ8FcLJz1hLdKBvIcOOl+" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-kcevGRVH1AQ8FcLJz1hLdKBvIcOOl+"></script>
+
+
+<script>
+  const goToEdit = (id) => {
+    localStorage.setItem('productEdit', id)
+    return window.location.href = '/product'
+  }
+  window.onload(() => {})
+</script>
