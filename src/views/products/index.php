@@ -12,7 +12,9 @@ $constructor->NavBar();
     <div class="row">
 
       <div class="col my-5">
-        <h2 class="mb-4 text-center" id='title'>Cadstro de Produto</h2>
+        <h2 class="mb-4 text-center" id='title'>Cadastro de Produto</h2>
+
+
         <form>
           <div class="form-group row ">
             <!--     <div class="col">
@@ -43,9 +45,13 @@ $constructor->NavBar();
           </div>
           <div class="form-group my-4">
             <label for="imagens">Imagem:</label>
-            <input type="file" class="form-control-file" id="imagens">
+            <input type="file" class="form-control-file" id="imagens" accept="image/png, image/jpeg">
           </div>
-          <button class="btn btn-primary" onclick='' id='submit'>Cadastrar</button>
+          <div class="text-center">
+            <button class="btn btn-primary lg" onclick='' id='submit'>Cadastrar</button>
+            <button class="btn btn-secondary lg" id='back'>Voltar</button>
+          </div>
+
         </form>
       </div>
 
@@ -90,16 +96,55 @@ $constructor->NavBar();
     }
   }
 
+  const createNewProduct = (body) => {
+    try {
+      const {
+        data
+      } = axios.post('http://localhost:8080/api/product/insert', body)
+      console.log(data)
+      return window.location.href = '/'
+    } catch (error) {
+      console.log(error)
+
+    }
+  }
+  export const getImage = async (file) => {
+    const data = new Promise(
+      (resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () => {
+          resolve(fileReader.result);
+        };
+
+        fileReader.onerror = (error) => {
+          reject(error);
+        };
+      }
+    );
+    const base = await data;
+
+    return String(base).split("base64,")[1];
+  };
+
   const formatter = new Intl.NumberFormat('pr-BR', {
     style: 'currency',
     currency: 'BRL',
 
   });
+  $('#back').click(e => {
+    e.preventDefault()
+    localStorage.clear('productEdit')
+    return window.location.href = '/'
 
-  $('#submit').click((e) => {
+  })
+
+  $('#submit').click(async (e) => {
     e.preventDefault();
     const name = $('#name').val()
     const description = $('#descricao').val()
+    const image = $('#imagens').prop('files')[0]
     let value = $('#valorVenda').maskMoney('unmasked')[0]
     const current_inventory = $('#estoque').val()
     const data = {
@@ -107,9 +152,12 @@ $constructor->NavBar();
       description,
       value,
       current_inventory,
+      'image_src': image ? await getImage(image) : null,
       "product_id": Number(productId)
     }
-    productId ? updateData(data) : null
+    if (name && description && value)
+      productId ? updateData(data) : createNewProduct(data)
+
   })
 
 

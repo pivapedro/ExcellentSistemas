@@ -19,7 +19,7 @@ $productsController = new ProductsController()
       <div class="col my-5">
         <h1 class="my-5">Lista de Produtos</h1>
         <div class='d-flex justify-content-end '>
-          <button type="button" class="btn btn-success my-2">Cadastro de Produto</button>
+          <button type="button" class="btn btn-success my-2" onclick='goToNew()'>Cadastro de Produto</button>
         </div>
         <table class="table my-2">
           <thead>
@@ -78,5 +78,8 @@ $productsController = new ProductsController()
     localStorage.setItem('productEdit', id)
     return window.location.href = '/product'
   }
-  window.onload(() => {})
+  const goToNew = (id) => {
+    localStorage.clear()
+    return window.location.href = '/product'
+  }
 </script>

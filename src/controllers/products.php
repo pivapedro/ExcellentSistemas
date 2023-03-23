@@ -115,7 +115,7 @@ class ProductsController
   }
   public function changeProduct($data)
   {
-    if ($data->description && $data->value && $data->current_inventory) {
+    if ($data->description && $data->value && $data->current_inventory && $data->name) {
       try {
         $product_id = $this->productsModel->changeProduct($data);
         $this->product_id = $product_id;
