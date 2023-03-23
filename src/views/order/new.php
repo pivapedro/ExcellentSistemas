@@ -12,7 +12,7 @@ $constructor->NavBar();
     <div class="row">
 
       <div class="col my-5">
-        <h2 class="mb-4 text-center imagens" id='title'>Cadastro de Produto</h2>
+        <h2 class="mb-4 text-center imagens" id='title'>Cadastro de Pedido</h2>
 
 
         <form>

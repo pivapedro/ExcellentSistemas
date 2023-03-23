@@ -41,7 +41,7 @@ class Conection
       $stmt->execute();
       $this->lastInsertId = $this->link->lastInsertId();
       $this->link->commit();
-      
+
       try {
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -52,7 +52,6 @@ class Conection
           }
           return $results;
         } else {
-          header('HTTP/1.0 404 Not Found');
           return [];
         }
       } catch (\Throwable $th) {

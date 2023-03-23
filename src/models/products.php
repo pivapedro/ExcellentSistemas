@@ -35,6 +35,7 @@ class Products
 
   public function deleteProduct($data)
   {
+    $this->deleteAllImage($data);
     $connection = new Conection();
     $sql = 'DELETE FROM product WHERE product_id =' . $data->product_id;
     $connection->SqlQueryExe($sql);
@@ -52,6 +53,13 @@ class Products
     return  $data;
   }
 
+  public function getImage($data)
+  {
+    $connection = new Conection();
+    $sql = 'SELECT * FROM product_images WHERE fk_product_id =' . $data->product_id;
+    $imagens = $connection->SqlQueryExe($sql);
+    return $imagens;
+  }
   public function addImage($data, $product_id)
   {
     $connection = new Conection();
@@ -63,6 +71,12 @@ class Products
   {
     $connection = new Conection();
     $sql = 'DELETE FROM product_images WHERE image_id=' . $data->image_id;
+    $connection->SqlQueryExe($sql);
+  }
+  public function deleteAllImage($data)
+  {
+    $connection = new Conection();
+    $sql = 'DELETE FROM product_images WHERE fk_product_id=' . $data->product_id;
     $connection->SqlQueryExe($sql);
   }
 }

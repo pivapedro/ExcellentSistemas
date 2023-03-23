@@ -61,7 +61,16 @@ class ProductsController
 
   public function getProduct($data)
   {
-    $data = $this->productsModel->getProduct($data);
+    $produto = $this->productsModel->getProduct($data)[0];
+    $imagem = $this->productsModel->getImage($data);
+    $data = [
+      'product_id' => $data->product_id,
+      'description' => $produto['description'],
+      'value' => $produto['value'],
+      'name' => $produto['name'],
+      'current_inventory' => $produto['current_inventory'],
+      'imagens' => count($imagem) ? $imagem : []
+    ];
     if (count($data)) {
       return $data;
     } else {
@@ -119,9 +128,6 @@ class ProductsController
       try {
         $product_id = $this->productsModel->changeProduct($data);
         $this->product_id = $product_id;
-        if ($data->image_src) {
-          $this->addImage($data, $product_id);
-        }
         return $this->response->sucessResponse();
       } catch (\Throwable $th) {
         return  $this->response->errorResponse('500', 'Internal Server Error' . $th->getMessage());

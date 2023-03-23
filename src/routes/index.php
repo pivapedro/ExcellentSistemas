@@ -4,7 +4,7 @@ namespace Routes;
 
 
 use Controllers\ProductsController;
-use Models\Order;
+use Controllers\OrdersController;
 
 class Router
 {
@@ -73,6 +73,11 @@ class Router
         $this->addRoute('GET', '/product', function () {
             return ("src/views/products/index.php");
         });
+        $this->addRoute('GET', '/new-order', function ($data) {
+            return ("src/views/order/new.php");
+
+        });
+
 
         $this->addRoute('POST', '/api/product/insert', function ($data) {
             $product = new ProductsController();
@@ -106,19 +111,23 @@ class Router
         });
 
         $this->addRoute('POST', '/api/order/insert', function ($data) {
-            $order = new Order();
+            $order = new OrdersController();
             return $order->createOrder($data);
         });
 
         $this->addRoute('PUT', '/api/order', function ($data) {
-            $order = new Order();
+            $order = new OrdersController();
             return $order->changeOrder($data);
         });
-
-
-        $this->addRoute('GET', '/api/order', function () {
-            $order = new Order();
-            return $order->getOrders();
+        $this->addRoute('DELETE', '/api/order', function ($data) {
+            $order = new OrdersController();
+            return $order->deleteOrder($data);
         });
+     
+/* 
+        $this->addRoute('GET', '/api/order', function () {
+            $order = new OrdersController();
+            return $order->getOrders();
+        }); */
     }
 }

@@ -39,7 +39,7 @@ class Constructor
               <a class="nav-link active" aria-current="page" href="/new-order">Novo Pedido</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/new-product">Novo Produto</a>
+              <a class="nav-link active" aria-current="page" href="/product" onclick='clearStorage()'>Novo Produto</a>
             </li>
           </ul>
           <!--  <form class="d-flex" role="search">
@@ -49,6 +49,11 @@ class Constructor
         </div>
       </div>
     </nav>
+    <script>
+      function clearStorage(){
+        localStorage.clear()  
+      }
+    </script>
 <?php
   }
 }
